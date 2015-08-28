@@ -33,32 +33,33 @@ import sys, os, traceback
 
 def main (infile, outfile = None):
 
-    print 'Hello world!'
-
-if __name__ == '__main__':
     try:
-        parser = argparse.ArgumentParser(description=__doc__,
-                formatter_class=argparse.RawDescriptionHelpFormatter)
-        parser.add_argument('infile', help="Input file",
-                type=str)
-#                type=argparse.FileType('r'))
-        parser.add_argument('-o', '--outfile', help="Output file",
-                default=sys.stdout, type=argparse.FileType('w'))
-        args = parser.parse_args()
-
-        main(**vars(args))
-
-        sys.exit(0)
-
-    except KeyboardInterrupt, e: # Ctrl-C
+        print 'Hello world!'
+        
+    except KeyboardInterrupt as e:
+        print "\nUser interrupt detected."
         raise e
 
-    except SystemExit, e: # sys.exit()
-        raise e
+    except IOError as e:
+        print str(e)
+        traceback.print_exc()
+        sys.exit(1)
 
-    except Exception, e:
+    except Exception as e:
         print 'ERROR, UNEXPECTED EXCEPTION'
         print str(e)
         traceback.print_exc()
-        os._exit(1)
+        sys.exit(2)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__,
+            formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('infile', help="Input file",
+            type=str)
+#                type=argparse.FileType('r'))
+    parser.add_argument('-o', '--outfile', help="Output file",
+            default=sys.stdout, type=argparse.FileType('w'))
+    args = parser.parse_args()
+
+    main(**vars(args))
 
